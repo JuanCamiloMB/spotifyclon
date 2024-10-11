@@ -18,29 +18,59 @@ class TopSongsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Top Songs'),
+        title: Text('Top 50 - Global'),
+        leading: Navigator.canPop(context)
+        ? IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop(); // Navega hacia atrás solo si es posible
+            },
+          )
+        : null,
       ),
-      body: 
-      topSongsAsyncValue.when(
-        data: (songs) {
-          print(songs);
-          // `songs` is now dynamic (List<dynamic> or List<Map<String, dynamic>>)
+      body: topSongsAsyncValue.when(
+        data: (data) {
           return ListView.builder(
-            itemCount: songs.length,
+            itemCount: data['tracks']['items'].length,
             itemBuilder: (BuildContext context, int index) {
-              final song = songs as Map<String, dynamic>; //TYPE NULL IS NOT A SUBTYPE OF TYPE MAP<STRING, DYNAMIC> IN TYPE CAST
-              // Assuming song is a Map with a 'name' field
-              final songName = song; // Fallback if 'name' is missing
-              return Container(
-                height: 50,
-                color: Colors.green, // Example of using index to determine color
-                child: Center(child: Text('Entry $songName')),
+              final song = data['tracks']['items'][index]['track'];
+              final songName = song['name'];
+              final artistName = song['artists'][0]['name'];
+              final albumArt = song['album']['images'][0]['url'];
+              return ListTile(
+                leading: Image.network(
+                  albumArt,
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                ),
+                title: Text(
+                  songName,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white, // Spotify-like style
+                  ),
+                ),
+                subtitle: Text(
+                  artistName,
+                  style: TextStyle(color: Colors.grey),
+                ),
+                trailing: Icon(
+                  Icons.more_vert,
+                  color: Colors.white,
+                ),
+                tileColor: Colors.black, // Background color like Spotify
+                onTap: () {
+                  // Handle song tap (e.g., play song)
+                },
               );
             },
           );
         },
-        loading: () => Center(child: CircularProgressIndicator()), // Loading state
-        error: (error, stack) => Center(child: Text('Error: $error')), // Error state
+        loading: () =>
+            Center(child: CircularProgressIndicator()), // Loading state
+        error: (error, stack) =>
+            Center(child: Text('Error: $error')), // Error state
       ),
     );
   }
