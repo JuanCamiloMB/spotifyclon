@@ -1,52 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotifyclon/providers/topSongs.provider.dart';
+import 'package:spotifyclon/views/login.view.dart';
+import 'package:spotifyclon/views/register.view.dart';
+import 'package:spotifyclon/views/topsongs.view.dart';
 
 void main() {
-  runApp(ProviderScope(child: MyApp()));
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 // Define a provider for the access token
 
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: TopSongsScreen(),
-    );
-  }
-}
-
-class TopSongsScreen extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final topSongsAsyncValue = ref.watch(spotifySongsProvider);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Top Songs'),
-      ),
-      body: topSongsAsyncValue.when(
-        data: (songs) {
-          // `songs` is now dynamic (List<dynamic> or List<Map<String, dynamic>>)
-          return ListView.builder(
-            itemCount: songs.length,
-            itemBuilder: (BuildContext context, int index) {
-              final song = songs[index] as Map<String, dynamic>;
-              // Assuming song is a Map with a 'name' field
-              final songName = song?? 'Unknown Song'; // Fallback if 'name' is missing
-              return Container(
-                height: 50,
-                color: Colors.green, // Example of using index to determine color
-                child: Center(child: Text('Entry $songName')),
-              );
-            },
-          );
-        },
-        loading: () => Center(child: CircularProgressIndicator()), // Loading state
-        error: (error, stack) => Center(child: Text('Error: $error')), // Error state
-      ),
+      debugShowCheckedModeBanner: false,
+      routes: {
+        '/login': (context) => LoginPage(),
+        '/register':  (context)=> RegisterPage(),
+        '/topsongs': (context) => TopSongs(),
+      },
+      initialRoute: '/login',
     );
   }
 }

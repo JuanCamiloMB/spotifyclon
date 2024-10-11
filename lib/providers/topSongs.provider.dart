@@ -1,11 +1,21 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spotifyclon/models/spotify_response.model.dart';
 import 'package:spotifyclon/providers/spotify_accesstoken.provider.dart';
 import 'package:http/http.dart' as http;
 
 final spotifySongsProvider = FutureProvider<dynamic>((ref) async {
-  final token = ref.watch(accessTokenProvider);
+    final tokenAsyncValue = ref.watch(accessTokenProvider);
+
+  // Check the state of the AsyncValue
+  if (tokenAsyncValue is AsyncLoading) {
+    return; // The token is still loading
+  } else if (tokenAsyncValue is AsyncError) {
+    throw Exception("Failed to load Spotify API token");
+  }
+
+  final token = tokenAsyncValue.value;
 
   if (token == null) {
     throw Exception("Spotify API token not found");
@@ -14,13 +24,12 @@ final spotifySongsProvider = FutureProvider<dynamic>((ref) async {
   final response = await fetchSpotifyData(token as String);
 
   if (response.statusCode == 200) {
-    print(response.body);
     // Parse the JSON response
     final decodedResponse = jsonDecode(response.body);
     
     // Assuming 'items' is the list of songs in the response
     // You might need to adjust this based on the actual structure of the API response
-    return decodedResponse['items'];
+    return decodedResponse;
   } else {
     throw Exception("Failed to fetch Spotify data");
   }
