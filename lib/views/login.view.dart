@@ -19,7 +19,7 @@ class LoginPage extends StatelessWidget {
   Widget _submitButton(context) {
     return ElevatedButton(
         onPressed: () async {
-            Navigator.pushReplacementNamed(context, '/topsongs');
+            Navigator.pushNamed(context, '/topsongs');
         },
         child: const Text('Login'));
   }

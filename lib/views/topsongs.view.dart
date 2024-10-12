@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotifyclon/providers/topSongs.provider.dart';
 
 class TopSongs extends ConsumerWidget {
+  const TopSongs({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final topSongsAsyncValue = ref.watch(spotifySongsProvider);
