@@ -55,7 +55,11 @@ class TopSongs extends ConsumerWidget {
                   ),
                   tileColor: Colors.black, // Background color like Spotify
                   onTap: () {
-                    // Handle song tap (e.g., play song)
+                    Navigator.pushNamed(
+                      context,
+                      '/songdetails',
+                      arguments: {'songId': song['id']},
+                    );
                   },
                 );
               },

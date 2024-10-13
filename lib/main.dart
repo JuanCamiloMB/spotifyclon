@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotifyclon/views/login.view.dart';
 import 'package:spotifyclon/views/register.view.dart';
+import 'package:spotifyclon/views/songdetails.view.dart';
 import 'package:spotifyclon/views/topsongs.view.dart';
 
 void main() {
@@ -10,7 +11,6 @@ void main() {
 }
 
 // Define a provider for the access token
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -21,8 +21,19 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         '/login': (context) => LoginPage(),
-        '/register':  (context)=> RegisterPage(),
+        '/register': (context) => RegisterPage(),
         '/topsongs': (context) => TopSongs(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/songdetails') {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (context) {
+              return SongDetailsPage(songId: args['songId']);
+            },
+          );
+        }
+        return null;
       },
       initialRoute: '/login',
     );
