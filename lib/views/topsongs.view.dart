@@ -22,31 +22,28 @@ class TopSongs extends ConsumerWidget {
             : null,
       ),
       body: topSongsAsyncValue.when(
-        data: (data) {
-          if (data != null) {
+        data: (songs) {
+          if (songs != null) {
             return ListView.builder(
-              itemCount: data['tracks']['items'].length,
+              itemCount: songs.length,
               itemBuilder: (BuildContext context, int index) {
-                final song = data['tracks']['items'][index]['track'];
-                final songName = song['name'];
-                final artistName = song['artists'][0]['name'];
-                final albumArt = song['album']['images'][0]['url'];
+                final song = songs[index];
                 return ListTile(
                   leading: Image.network(
-                    albumArt,
+                    song.albumArt,
                     width: 50,
                     height: 50,
                     fit: BoxFit.cover,
                   ),
                   title: Text(
-                    songName,
+                    song.songName,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white, // Spotify-like style
                     ),
                   ),
                   subtitle: Text(
-                    artistName,
+                    song.artistName,
                     style: TextStyle(color: Colors.grey),
                   ),
                   trailing: Icon(
@@ -58,7 +55,7 @@ class TopSongs extends ConsumerWidget {
                     Navigator.pushNamed(
                       context,
                       '/songdetails',
-                      arguments: {'songId': song['id']},
+                      arguments: {'songId': song.id},
                     );
                   },
                 );
