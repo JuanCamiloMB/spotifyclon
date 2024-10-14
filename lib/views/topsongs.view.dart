@@ -23,45 +23,43 @@ class TopSongs extends ConsumerWidget {
       ),
       body: topSongsAsyncValue.when(
         data: (songs) {
-          if (songs != null) {
-            return ListView.builder(
-              itemCount: songs.length,
-              itemBuilder: (BuildContext context, int index) {
-                final song = songs[index];
-                return ListTile(
-                  leading: Image.network(
-                    song.albumArt,
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.cover,
+          return ListView.builder(
+            itemCount: songs.length,
+            itemBuilder: (BuildContext context, int index) {
+              final song = songs[index];
+              return ListTile(
+                leading: Image.network(
+                  song.albumArt,
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                ),
+                title: Text(
+                  song.songName,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white, // Spotify-like style
                   ),
-                  title: Text(
-                    song.songName,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white, // Spotify-like style
-                    ),
-                  ),
-                  subtitle: Text(
-                    song.artistName,
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                  trailing: Icon(
-                    Icons.more_vert,
-                    color: Colors.white,
-                  ),
-                  tileColor: Colors.black, // Background color like Spotify
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/songdetails',
-                      arguments: {'songId': song.id},
-                    );
-                  },
-                );
-              },
-            );
-          }
+                ),
+                subtitle: Text(
+                  song.artistName,
+                  style: TextStyle(color: Colors.grey),
+                ),
+                trailing: Icon(
+                  Icons.more_vert,
+                  color: Colors.white,
+                ),
+                tileColor: Colors.black, // Background color like Spotify
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/songdetails',
+                    arguments: {'songId': song.id},
+                  );
+                },
+              );
+            },
+          );
         },
         loading: () =>
             Center(child: CircularProgressIndicator()), // Loading state

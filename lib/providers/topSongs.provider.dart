@@ -29,12 +29,7 @@ final spotifySongsProvider = FutureProvider<List<SpotifySong>>((ref) async {
     final decodedResponse = jsonDecode(response.body);
     final List<dynamic> items = decodedResponse['tracks']['items'];
 
-    // Map the list of items to a list of SpotifySong objects
     return items.map((item) => SpotifySong.fromJson(item)).toList();
-
-    // Assuming 'items' is the list of songs in the response
-    // You might need to adjust this based on the actual structure of the API response
-    // return decodedResponse;
   } else {
     throw Exception("Failed to fetch Spotify data");
   }

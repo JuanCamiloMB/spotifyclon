@@ -19,7 +19,7 @@ class SongDetailsPage extends ConsumerWidget {
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
                   Navigator.of(context)
-                      .pop(); // Navega hacia atrás solo si es posible
+                      .pop(); 
                 },
               )
             : null,
@@ -32,15 +32,15 @@ class SongDetailsPage extends ConsumerWidget {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 mainAxisAlignment:
-                    MainAxisAlignment.center, // Center the column vertically
+                    MainAxisAlignment.center, 
                 crossAxisAlignment:
-                    CrossAxisAlignment.center, // Center the column horizontally
+                    CrossAxisAlignment.center, 
                 children: [
                   // Album Art
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
-                      song['album']['images'][0]['url'], // URL for album art
+                      song.albumArt, // URL for album art
                       height: 250,
                       width: 250,
                       fit: BoxFit.cover,
@@ -50,7 +50,7 @@ class SongDetailsPage extends ConsumerWidget {
 
                   // Song Title
                   Text(
-                    song['name'],
+                    song.songName,
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -62,7 +62,7 @@ class SongDetailsPage extends ConsumerWidget {
 
                   // Artist Name
                   Text(
-                    song['artists'][0]['name'],
+                    song.artistName,
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.grey[400],
@@ -71,14 +71,14 @@ class SongDetailsPage extends ConsumerWidget {
                   ),
                   const SizedBox(height: 20),
 
-                  // Popularity Bar or Score
+                  // Popularity Score
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.thumb_up, color: Colors.green),
                       const SizedBox(width: 8),
                       Text(
-                        'Popularity: ${song['popularity']}%',
+                        'Popularity: ${song.popularity}%',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.white70,
@@ -88,7 +88,7 @@ class SongDetailsPage extends ConsumerWidget {
                   ),
                   const SizedBox(height: 20),
 
-                  // Playback Controls (Mocked for UI)
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
