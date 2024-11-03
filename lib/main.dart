@@ -4,6 +4,7 @@ import 'package:spotifyclon/views/login.view.dart';
 import 'package:spotifyclon/views/register.view.dart';
 import 'package:spotifyclon/views/songdetails.view.dart';
 import 'package:spotifyclon/views/topsongs.view.dart';
+import 'package:spotifyclon/authwrapper.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,14 +23,14 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
-        '/topsongs': (context) => TopSongs(),
+        '/topsongs': (context) => AuthWrapper(child: TopSongs()),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/songdetails') {
           final args = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(
             builder: (context) {
-              return SongDetailsPage(songId: args['songId']);
+              return AuthWrapper(child: SongDetailsPage(songId: args['songId']));
             },
           );
         }
