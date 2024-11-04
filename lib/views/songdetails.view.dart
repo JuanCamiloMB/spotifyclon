@@ -14,12 +14,19 @@ class SongDetailsPage extends ConsumerWidget {
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text('Song Details'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.account_circle),
+            onPressed: () {
+              Navigator.pushNamed(context, '/profile');
+            },
+          ),
+        ],
         leading: Navigator.canPop(context)
             ? IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
-                  Navigator.of(context)
-                      .pop(); 
+                  Navigator.of(context).pop();
                 },
               )
             : null,
@@ -31,10 +38,8 @@ class SongDetailsPage extends ConsumerWidget {
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
-                mainAxisAlignment:
-                    MainAxisAlignment.center, 
-                crossAxisAlignment:
-                    CrossAxisAlignment.center, 
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Album Art
                   ClipRRect(
@@ -87,7 +92,6 @@ class SongDetailsPage extends ConsumerWidget {
                     ],
                   ),
                   const SizedBox(height: 20),
-
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

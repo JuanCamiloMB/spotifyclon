@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:spotifyclon/auth.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
-  
+
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
+
+  Future<void> signInWithEmailAndPassword() async {
+    await Auth().signInWithEmailAndPassword(
+        email: _controllerEmail.text, password: _controllerPassword.text);
+  }
 
   // Screen title
   Widget _title() {
@@ -19,7 +25,8 @@ class LoginPage extends StatelessWidget {
   }
 
   // text email and password
-  Widget _entryField(String hint, TextEditingController controller, {bool isPassword = false}) {
+  Widget _entryField(String hint, TextEditingController controller,
+      {bool isPassword = false}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.black54, // Fondo oscuro para los campos de texto
@@ -33,14 +40,15 @@ class LoginPage extends StatelessWidget {
           hintText: hint,
           hintStyle: const TextStyle(color: Colors.white60),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         ),
       ),
     );
   }
 
   // LogIn button
-  Widget _submitButton(BuildContext context) {
+  Widget _submitButton(context) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -51,11 +59,16 @@ class LoginPage extends StatelessWidget {
       ),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent, 
-          shadowColor: Colors.transparent, 
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
         ),
         onPressed: () async {
-          Navigator.pushNamed(context, '/topsongs');
+          try {
+            await signInWithEmailAndPassword();
+            Navigator.pushReplacementNamed(context, '/topsongs');
+          } catch (e) {
+            print('Login failed: $e');
+          }
         },
         child: const Padding(
           padding: EdgeInsets.symmetric(vertical: 15),
@@ -84,7 +97,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, 
+      backgroundColor: Colors.black,
       body: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(20),

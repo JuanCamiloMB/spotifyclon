@@ -11,6 +11,14 @@ class TopSongs extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Top 50 - Global'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.account_circle),
+            onPressed: () {
+              Navigator.pushNamed(context, '/profile');
+            },
+          ),
+        ],
         leading: Navigator.canPop(context)
             ? IconButton(
                 icon: Icon(Icons.arrow_back),

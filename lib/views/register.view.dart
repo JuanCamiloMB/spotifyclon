@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:spotifyclon/auth.dart';
 
 class RegisterPage extends StatelessWidget {
   RegisterPage({super.key});
-  
+
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
-  final TextEditingController _controllerPasswordAgain = TextEditingController();
+  final TextEditingController _controllerPasswordAgain =
+      TextEditingController();
+
+  Future<void> createWithEmailAndPassword() async {
+    await Auth().createWithEmailAndPassword(
+        email: _controllerEmail.text, password: _controllerPassword.text);
+  }
 
   // email and password
-  Widget _entryField(String hint, TextEditingController controller, {bool isPassword = false}) {
+  Widget _entryField(String hint, TextEditingController controller,
+      {bool isPassword = false}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.black54, // Fondo oscuro para los campos de texto
@@ -17,19 +25,20 @@ class RegisterPage extends StatelessWidget {
       child: TextField(
         controller: controller,
         obscureText: isPassword, // Oculta el texto si es un campo de contraseña
-        style: const TextStyle(color: Colors.white), 
+        style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: const TextStyle(color: Colors.white60),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         ),
       ),
     );
   }
 
   // Botón de registro
-  Widget _submitButton(BuildContext context) {
+  Widget _submitButton(context) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -40,11 +49,16 @@ class RegisterPage extends StatelessWidget {
       ),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent, 
-          shadowColor: Colors.transparent, 
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
         ),
         onPressed: () async {
-          Navigator.pushNamed(context, '/topsongs');
+          try {
+            await createWithEmailAndPassword();
+            Navigator.pushReplacementNamed(context, '/topsongs');
+          } catch (e) {
+            print('Login failed: $e');
+          }
         },
         child: const Padding(
           padding: EdgeInsets.symmetric(vertical: 15),
@@ -73,7 +87,7 @@ class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, 
+      backgroundColor: Colors.black,
       body: Container(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -98,7 +112,8 @@ class RegisterPage extends StatelessWidget {
             const SizedBox(height: 20),
             _entryField('Contraseña', _controllerPassword, isPassword: true),
             const SizedBox(height: 20),
-            _entryField('Repetir contraseña', _controllerPasswordAgain, isPassword: true),
+            _entryField('Repetir contraseña', _controllerPasswordAgain,
+                isPassword: true),
             const SizedBox(height: 30),
             _submitButton(context),
             const SizedBox(height: 20),
