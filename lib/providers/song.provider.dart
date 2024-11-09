@@ -3,32 +3,44 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotifyclon/models/song.model.dart';
 import 'package:spotifyclon/providers/spotify_accesstoken.provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
-final songDetailsProvider = FutureProvider.family<SpotifySong, String>((ref, songId) async {
+final songDetailsProvider =
+    FutureProvider.family<SpotifySong, String>((ref, songId) async {
+  // Obtain shared preferences.
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final String? savedSong = prefs.getString(songId);
+
+  if (savedSong != null) {
+    print('Loading song from cache');
+    return jsonDecode(savedSong);
+  } else {
     final tokenAsyncValue = ref.watch(accessTokenProvider);
 
-  // Check the state of the AsyncValue
-  if (tokenAsyncValue is AsyncLoading) {
-    await Future.delayed(Duration(milliseconds: 100)); // The token is still loading
-  } else if (tokenAsyncValue is AsyncError) {
-    throw Exception("Failed to load Spotify API token");
-  }
+    // Check the state of the AsyncValue
+    if (tokenAsyncValue is AsyncLoading) {
+      await Future.delayed(
+          Duration(milliseconds: 100)); // The token is still loading
+    } else if (tokenAsyncValue is AsyncError) {
+      throw Exception("Failed to load Spotify API token");
+    }
 
-  final token = tokenAsyncValue.value;
+    final token = tokenAsyncValue.value;
 
-  if (token == null) {
-    throw Exception("Spotify API token not found");
-  }
+    if (token == null) {
+      throw Exception("Spotify API token not found");
+    }
 
-  final response = await fetchSpotifyData(token, songId);
+    final response = await fetchSpotifyData(token, songId);
 
-  if (response.statusCode == 200) {
-    // Parse the JSON response
-    final decodedResponse = jsonDecode(response.body);
-    
-    return SpotifySong.fromJson(decodedResponse);
-  } else {
-    throw Exception("Failed to fetch Spotify data");
+    if (response.statusCode == 200) {
+      // Parse the JSON response
+      final decodedResponse = jsonDecode(response.body);
+      await prefs.setString(songId, jsonEncode(decodedResponse));
+      return SpotifySong.fromJson(decodedResponse);
+    } else {
+      throw Exception("Failed to fetch Spotify data");
+    }
   }
 });
 
